@@ -1,0 +1,37 @@
+class Solution {
+public:
+
+    int solveTab(vector<int> &nums1, vector<int> &nums2){
+        int n = nums1.size();
+        vector<int>swap(n, 0); //considering swapping senario
+        vector<int>noSwap(n, 0); //considering not swapping 
+        int ans=0;
+        if(nums1.back()<=nums1[n-2] || nums2.back()<=nums2[n-2] ) ans=1; 
+        swap[n-1]=1; // base case
+
+        for(int i=n-2; i>=0; i--){
+            if(nums1[i]>=nums1[i+1] || nums2[i]>=nums2[i+1]){
+                //invalid case either swap i or swap i+1
+                swap[i]=1+noSwap[i+1];
+                noSwap[i]=swap[i+1];
+                ans=max(ans, min(swap[i], noSwap[i]));
+            }else{
+                //No swap needed
+                if(nums2[i]>=nums1[i+1] || nums1[i]>=nums2[i+1]){
+                    //If swapped it will become Invalid so you would have to swap again
+                    swap[i]=1+swap[i+1];
+                    noSwap[i]=noSwap[i+1];
+                }else{
+                    swap[i]=1+min(swap[i+1], noSwap[i+1]);
+                    noSwap[i]=min(swap[i+1], noSwap[i+1]);
+                }
+                ans=max(ans, min(swap[i], noSwap[i]));
+            }
+        }
+        return ans;
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        return solveTab(nums1, nums2);
+    }
+};
