@@ -1,0 +1,50 @@
+class Solution {
+private:  
+    vector<int> id;
+    vector<bool> visited;
+    void personToSeat(vector<int> &row) {
+        int n = row.size();
+        id.resize(n);
+        for (int i = 0; i < n; i++) 
+            id[row[i]] = i;
+    }
+
+    int findPartner(int x) {
+        return x & 1 ? x - 1 : x + 1;
+    }
+
+    int dfs(vector<int> &row, int idx, int partner) {
+        if (row[idx] == partner)
+            return 0;
+        
+        int currPartner = findPartner(row[idx]); // actual partner
+        int currPartnerIdx = id[currPartner];
+        int currPartnerNext = findPartner(currPartnerIdx); // partner in the present block
+        
+        visited[row[idx]] = visited[currPartner] = true;
+
+        return 1 + dfs(row, currPartnerNext, partner);
+    }
+
+    int swapCouples(vector<int> &row) {
+        int n = row.size(), swaps = 0;
+        visited.resize(n);
+
+        for(int i = 0; i < n; i += 2) {
+            if (!visited[row[i]]) {
+                visited[row[i]] = visited[findPartner(row[i])] = true;
+                swaps += dfs(row, i + 1, findPartner(row[i]));
+            }
+        }
+        return swaps;
+    }
+
+public:
+    int minSwapsCouples(vector<int>& row) {
+        int n = row.size(), ans = 0;
+        
+        personToSeat(row);
+
+        return swapCouples(row);
+    }
+};
