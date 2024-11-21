@@ -1,0 +1,26 @@
+class Solution {
+    unordered_map<int,int> H;
+    int dfs(TreeNode *root)
+    {
+        if(!root) return 0;
+        int cur = root->val + dfs(root->left) + dfs(root->right);
+        H[cur]++;
+        return cur;
+    }
+public:
+    vector<int> findFrequentTreeSum(TreeNode* root) 
+    {
+        dfs(root);
+        vector<int> res;
+        int curMax = 0;
+        for(auto &[k,v]: H)
+        {
+            if(v<curMax) continue;
+            if(v==curMax){res.push_back(k); continue;}
+            curMax = v;
+            res.clear();
+            res.push_back(k);
+        }
+        return res;
+    }
+};
