@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> replaceElements(vector<int>& arr) {
+        int n = arr.size(),a=-1,b=-1;
+        vector<int> res(2);
+        for(int i=0;i<n-1;i++){
+            if(i>=a){
+                res = help(arr,i+1);
+                a = res[0];
+                b = res[1];
+            }
+            arr[i]=b;
+        }
+        arr[n-1]=-1;
+        return arr;
+    }
+    vector<int> help(vector<int>& arr,int st){
+        vector<int> res(2);
+        res[0]=st;
+        res[1]=arr[st];
+        int max = arr[st];
+        for(int i=st;i<arr.size();i++){
+            if(arr[i]>max){
+                res[0]=i;
+                res[1]=arr[i];
+                max = arr[i];
+            }
+        }
+        return res;
+    }
+};
